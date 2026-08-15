@@ -31,6 +31,7 @@ app.get('/api/health', (req, res) => res.json({ ok: true, service: 'reparoxpress
 app.use((req, res) => res.status(404).json({ error: 'Ruta no encontrada' }));
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`✅ ReparoXpress API corriendo en http://localhost:${PORT}`);
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`ReparoXpress API corriendo en puerto ${PORT}`);
 });
