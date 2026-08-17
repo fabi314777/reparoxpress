@@ -31,25 +31,7 @@ app.get('/api/health', (req, res) => res.json({ ok: true, service: 'reparoxpress
 
 
 
-app.get('/api/db-health', async (req, res) => {
-  try {
-    const pool = require('./db');
-    const [rows] = await pool.query('SELECT 1 AS connected');
 
-    res.json({
-      ok: true,
-      database: 'railway',
-      mysql: rows[0].connected === 1
-    });
-  } catch (err) {
-    console.error('DB HEALTH ERROR:', err);
-
-    res.status(500).json({
-      ok: false,
-      error: err.code || err.message
-    });
-  }
-});
 
 
 
