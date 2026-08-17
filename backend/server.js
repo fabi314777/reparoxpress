@@ -28,6 +28,32 @@ app.use('/api/reports', require('./routes/reports'));
 
 app.get('/api/health', (req, res) => res.json({ ok: true, service: 'reparoxpress-api' }));
 
+
+
+
+app.get('/api/db-health', async (req, res) => {
+  try {
+    const pool = require('./db');
+    const [rows] = await pool.query('SELECT 1 AS connected');
+
+    res.json({
+      ok: true,
+      database: 'railway',
+      mysql: rows[0].connected === 1
+    });
+  } catch (err) {
+    console.error('DB HEALTH ERROR:', err);
+
+    res.status(500).json({
+      ok: false,
+      error: err.code || err.message
+    });
+  }
+});
+
+
+
+
 app.use((req, res) => res.status(404).json({ error: 'Ruta no encontrada' }));
 
 const PORT = process.env.PORT || 4000;
