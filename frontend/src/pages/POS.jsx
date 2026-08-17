@@ -111,28 +111,17 @@ export default function POS() {
       });
       setCart([]);
 
-      let photoNote = '';
       if (photoFiles.length) {
         try {
           const form = new FormData();
           photoFiles.forEach((f) => form.append('photos', f));
           await api.post(`/sales/${data.id}/photos`, form);
-          photoNote = ` ${photoFiles.length} foto(s) de evidencia adjuntada(s).`;
         } catch (photoErr) {
-          photoNote = ' No se pudieron subir las fotos de evidencia, pero la venta sí quedó guardada.';
+          // la venta ya quedó guardada igual, solo no se subieron las fotos
         }
       }
       setPhotoFiles([]);
-
-      if (data.email?.sent) {
-        setSuccessMsg(`✅ Venta registrada y comprobante enviado por correo al cliente.${photoNote}`);
-      } else if (data.email?.reason === 'no_client_email') {
-        setSuccessMsg(`✅ Venta registrada correctamente.${photoNote}`);
-      } else if (data.email?.reason === 'not_configured') {
-        setSuccessMsg(`✅ Venta registrada. (El envío de correo aún no está configurado — ver backend/services/mailer.js)${photoNote}`);
-      } else {
-        setSuccessMsg(`✅ Venta registrada. No se pudo enviar el correo al cliente${data.email?.reason ? ` (${data.email.reason})` : ''}.${photoNote}`);
-      }
+      setSuccessMsg('✅ Venta registrada correctamente.');
     } catch (err) {
       setSuccessMsg('❌ ' + (err.response?.data?.error || 'No se pudo registrar la venta.'));
     } finally {
